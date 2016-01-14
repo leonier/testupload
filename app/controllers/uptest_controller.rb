@@ -202,7 +202,7 @@ class UptestController < ApplicationController
 			render "error"
 			return
 		end
-		if myfile.public == 0
+		if myfile.public == 0 or myfile.public == nil
 			myfile.public = 1
 		else
 			myfile.public = 0
