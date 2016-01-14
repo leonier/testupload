@@ -32,7 +32,7 @@
         <li>
             <a href="/postthread">Forum</a>
         </li>
-		<% if session[:user_id].blank? == false and @todaynotification != nil %>
+		<% if user.blank? == false and @todaynotification.blank? == false %>
         <li>
             <p class="notification-menu-text blink_me">You have Notifications!</p>
 			<ul>

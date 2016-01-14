@@ -185,7 +185,7 @@ function copyAHref(id)
 }
 </script>
 <% provide(:title, @user.name) %>
-<% if @user.nickname.empty? %>
+<% if @user.nickname.blank? %>
 <h3><%= @user.name %>'s Files </h3>
 <% else %>
 <h3><%= @user.nickname %>'s Files </h3>
