@@ -1,0 +1,19 @@
+<nav>
+    <ul>
+		<p><%= @appname %> Administration</p>
+		<% if session[:admin_id].blank? %>
+
+		<% else %>
+		<li>
+			<a href="#" onclick="return false;">
+			<% admin=Admin.find_by_id(session[:admin_id]) %>
+			<%= admin.name %></a>
+			<ul>
+			<li><a href="/admin/logout">Logout</a></li>
+			</ul>
+		</li>
+
+		<% end %>
+
+    </ul>
+</nav>

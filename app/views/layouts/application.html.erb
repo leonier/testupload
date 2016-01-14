@@ -15,7 +15,14 @@
 	<%= yield %>
 	</div>
 <% else %>
+<% if @adminmode == true %>
+	<%= render 'layouts/navbar_admin' %>	
+	<div class="container main">
+	<%= yield %>
+	</div>
+<% else %>
 <%= yield %>
+<% end %>
 <% end %>
 </body>
 </html>

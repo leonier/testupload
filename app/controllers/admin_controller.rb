@@ -1,7 +1,9 @@
 require 'digest'
 class AdminController < ApplicationController
-	before_filter :set_title
-	def set_title
+	before_filter :settings
+	def settings
+		@nonav=true
+		@adminmode=true
 		@title="Administration"
 	end
 	def loginpage

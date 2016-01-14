@@ -1,5 +1,6 @@
-Admin page <br />
-Administrator: <%= @admin.name %> <a href="/admin/logout">Logout </a>
+<h3>Administration page</h3>
+<div class="dblock">Administrator: <%= @admin.name %></div>
+
 <div style="color: Red;"><%= flash[:error] %></div>
 <% unless  @users.empty? %>
 <table>
