@@ -73,7 +73,7 @@ class UserController < ApplicationController
 		newuser.password_hash=hash
 		newuser.salt=salt
 		if newuser.save!
-			
+			session[:user_id]=newuser.id
 		else
 			flash[:error]="Save error!"
 			redirect_to :action=> referer
