@@ -72,10 +72,12 @@ class UptestController < ApplicationController
 		deletefile=Uptest.find_by_id(params[:file_id])
 		if deletefile == nil
 		else
+			fname=deletefile.filename
 			delfilename=deletefile.id.to_s + "_"+ deletefile.uploadtime.strftime("%Y%m%d%H%M%S")+File.extname(deletefile.filename)
 			if File.exist?(Rails.root.join('uploads', delfilename).to_s)
 				File.delete(Rails.root.join('uploads', delfilename).to_s)
 				deletefile.destroy
+				flash[:error]="Successfully deleted file "+fname;
 			end
 		end
 		redirect_to :action => "index"
