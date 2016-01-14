@@ -1,4 +1,3 @@
-require 'base64'
 class UptestController < ApplicationController
 	def index
 		if session[:user_id] == nil

@@ -1,14 +1,21 @@
+<% require 'base64' %>
+<% require 'digest' %>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FilePoster: <%= @title %></title>
+  <title><%= @appname %>: <%= @title %></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
+<% if @nonav != true %>
+	<%= render 'layouts/navbar' %>	
+	<div class="container main">
+	<%= yield %>
+	</div>
+<% else %>
 <%= yield %>
-
+<% end %>
 </body>
 </html>

@@ -1,6 +1,13 @@
 <h3>View thread</h3>
 <div style="color: Red;"><%= flash[:error] %></div>
-<div>Post by: <%= @poster.name %></div>
+<div>Post by: 
+<a href="/user?user_id=<%= @poster.id %>">
+<% if @poster.nickname.blank? %>
+<%= @poster.name %>
+<% else %>
+<%= @poster.nickname %>
+<% end %></a>
+</div>
 <div>Post at: <%= @postthread.created_at.strftime("%Y.%m.%d %H:%M:%S") %></div>
 <div>Title: <%= @postthread.title %>
 <% if @user!=nil and @poster.id==@user.id %>
@@ -17,7 +24,14 @@
 <div>
 <% @replies.each do |reply| %>
 <div  class= "hoverparent">
-<div>Reply by: <%= reply.user.name %></div>
+<div>Reply by: 
+<a href="/user?user_id=<%= reply.user.id %>">
+<% if reply.user.nickname.blank? %>
+<%= reply.user.name %>
+<% else %>
+<%= reply.user.nickname %>
+<% end %></a>
+</div>
 <div>Post at: <%= reply.created_at.strftime("%Y.%m.%d %H:%M:%S") %></div>
 <div><div class="horizonal-div">Title: <%= reply.title %></div>
 <% if @user!=nil and reply.user.id==@user.id %>
@@ -44,13 +58,22 @@
 		flash[:nrtitle]="Re: "+@postthread.title
 	end
 %>
-User:<%= @user.name %>
+
+<div class="dblock">
+User:
+<% if @user.nickname.blank? %>
+<%= @user.name %>
+<% else %>
+<%= @user.nickname %>
+<% end %>
+</div>
+
 <%= form_tag :action => 'reply_save' do %>
 <%= hidden_field_tag "user_id", @user.id %>
 <%= hidden_field_tag "postthread_id", @postthread.id %>
-Title:<%= text_field_tag "title", flash[:nrtitle], :class=>"post_title" %><br />
-Content:<br />
-<%= text_area_tag "content", flash[:nrcontent], :class=>"post_content" %> <br />
+<div class="dblock">Title:<%= text_field_tag "title", flash[:nrtitle], :class=>"post_title" %></div>
+<div class="dblock">Content:<br />
+<%= text_area_tag "content", flash[:nrcontent], :class=>"post_content" %> <br /></div>
 <%= submit_tag "Post" %>
 <% end %>
 <% else %>

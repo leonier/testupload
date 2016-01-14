@@ -1,9 +1,5 @@
-﻿<% require 'base64' %>
-<% require 'digest' %>
-
-
+﻿<h3>Edit information of <%= @user.name %>'s all files</h3>
 <% unless @files.blank? %>
-Edit information of <%= @user.name %>'s all files <br />
 <%= form_tag :action => 'saveall' do %>
 <table>
 <tr>

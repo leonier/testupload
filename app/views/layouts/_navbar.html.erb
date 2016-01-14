@@ -1,0 +1,46 @@
+<nav>
+    <ul>
+		<p><%= @appname %></p>
+		<% if session[:user_id].blank? %>
+		<li>
+			<a href="/user/loginpage">Login</a>
+		</li>
+		<li>
+			<a href="/user/registerpage">Register</a>
+		</li>
+		<% else %>
+		<li>
+			<a href="/user">
+			<% user=User.find_by_id(session[:user_id])
+				if user.nickname.blank? %>
+					<%= User.find_by_id(session[:user_id]).name %>
+				<% else %>
+					<%= User.find_by_id(session[:user_id]).nickname %>
+				<% end %>		
+			</a>
+			<ul>
+			<li><a href="/user/edit_info">Edit user profile</a></li>
+			<li><a href="/user/change_password_page">Change Password</a></li>
+			<li><a href="/user/logout">Logout</a></li>
+			</ul>
+		</li>
+		<li>
+            <a href="/">Files</a>
+        </li>
+		<% end %>
+
+        <li>
+            <a href="/postthread">Forum</a>
+        </li>
+		<% if session[:user_id].blank? == false and @todaynotification != nil %>
+        <li>
+            <p class="notification-menu-text blink_me">You have Notifications!</p>
+			<ul>
+				<% @todaynotification.each do |notification| %>
+					<p class="notification-text"><%= notification.notificationtext %>&nbsp;<a href="/user/notification_read?nid="<%= notification.id %>">OK</a></p>
+				<% end %>
+			</ul>
+        </li>		
+		<% end %>
+    </ul>
+</nav>

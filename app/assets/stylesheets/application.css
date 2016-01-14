@@ -11,8 +11,32 @@
  *= require_self
  *= require_tree .
  */
+ 
+/* common elements */
+.main  a{
+	color:#428bca;
+	text-decoration:none
+}
 
-
+.main  a:hover,.main  a:focus{
+	color:#2a6496;
+	text-decoration:underline
+}
+.main table{
+	border-spacing: 1% 2em;
+	border-collapse: collapse
+}
+.main table th,.main table td{
+	border:1px solid #ccc;
+    padding: 0.5em;
+		
+}
+.main table  tr:nth-child(odd) td,.main table tr:nth-child(odd)>th{
+	background-color:#f9f9f9
+}
+.main .dblock{
+	padding: 0.2em;
+}
 .hiddenchild {
    display: none;
 }
@@ -82,4 +106,111 @@
 	width: 60%;
     height: 7em;
 	resize: none; 
+}
+
+/* navbar */
+nav {
+
+    position: fixed;
+	
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width:100%;
+    background-color: #333;
+    border: 1px solid #333;
+    color: #fff;
+    display: block;
+    margin: 0;
+    overflow: hidden;
+}
+nav ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+nav ul p{
+	margin: 0;
+	display: inline-block;
+	padding: 0.5em 2em;
+	 font-weight: bold;
+}
+nav ul li {
+    margin: 0;
+    display: inline-block;
+    list-style-type: none;
+    transition: all 0.2s;
+}
+
+nav > ul > li > a {
+    color: #aaa;
+    display: block;
+    padding: 0.5em 2em;
+    text-decoration: none;
+
+}
+
+nav li > ul{
+    display : none;
+    background-color: #eee;
+	border-top: none;
+	border: 1px solid #000000;
+}
+
+nav li > ul li{
+    display: block;
+	
+}
+
+nav  li > ul li a {
+    color: Black;
+    display: block;
+    padding: 0.5em 2em;
+    text-decoration: none;
+}
+nav li:hover {
+    background-color: #666;
+}
+nav li:hover > a{
+    color: White;
+}
+nav li:hover > ul{
+
+   /* position:absolute;*/
+   position: fixed;
+    display : block;
+}
+nav li > ul > li ul  {
+    display: none;
+    background-color: #888;
+}
+nav li > ul > li:hover > ul  {
+    /*position:absolute;*/
+	 position: fixed;
+    display : block;
+    margin-left:100%;
+    margin-top:-3em;
+}
+.container {
+	position: absolute;
+	top:2em;
+	width: 100%;
+}
+.notification-menu-text
+{
+	color: Red;
+	/*text-decoration: blink;*/
+}
+.notification-text
+{
+	color: Black;
+	font-weight:normal;
+}
+.blink_me {
+  animation: blinker 2s step-end infinite
+}
+
+@keyframes blinker {  
+	 0%{color: Red;}
+	 50%{color: White}
 }

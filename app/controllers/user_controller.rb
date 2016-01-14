@@ -1,7 +1,6 @@
-require 'digest'
-require 'securerandom'
 class UserController < ApplicationController
 	def loginpage
+		@title="User Login"
 		if session[:user_id] != nil
 			if User.find_by_id(session[:user_id]) != nil
 				@error = "Already logon to system!"
@@ -56,24 +55,40 @@ class UserController < ApplicationController
 	end
 	def register
 		flash[:username]=params[:username]
-		
+		flash[:nickname]=params[:nickname]
+		flash[:email]=params[:email]
 		if checkusername(params[:username], "registerpage") == false
+			return
+		end
+		if checkpassword(params[:password1], "registerpage") == false
 			return
 		end
 		if checkpassword(params[:password], "registerpage") == false
 			return
+		end		
+		if params[:password1] != params[:password]
+			flash[:error]="You must enter the same password twice!"
+			redirect_to :back
+			return
 		end
-		
 		salt = SecureRandom.hex
 		hash = genhash(params[:password], salt)
 		@result= "User:"+params[:username]
 		
 		newuser=User.new
 		newuser.name=params[:username]
+		if params[:nickname].empty? == false
+			newuser.nickname=params[:nickname]
+		end
+		if params[:email].empty? == false
+			newuser.email=params[:email]
+		end
+		
 		newuser.password_hash=hash
 		newuser.salt=salt
 		if newuser.save!
 			session[:user_id]=newuser.id
+			flash.discard
 		else
 			flash[:error]="Save error!"
 			redirect_to :action=> referer
@@ -146,6 +161,68 @@ class UserController < ApplicationController
 		flash[:error]="Successfully updated password for user "+testuser.name
 		redirect_to :controller=> "uptest", :action=> "index"
 	end
+	def user_info
+		if params[:user_id]!=nil
+			@user=User.find_by_id(params[:user_id])
+		else
+			if session[:user_id].blank?
+				@error="Wrong user ID!"
+				render "error"
+				return
+			else
+				@user=User.find_by_id(session[:user_id])
+			end
+		end
+		if @user.blank?
+			@error="Wrong user ID!"
+			render "error"
+			return
+		end
+		if @user.id==session[:user_id]
+			@isself=1
+		end
+	end
+	def edit_info_page
+		if session[:user_id].blank?
+			@error="Must login to edit your infomation!"
+			render "error"
+			return
+		else
+			@user=User.find_by_id(session[:user_id])
+		end
+		if @user.blank?
+			@error="Wrong user ID!"
+			render "error"
+			return
+		end
+	end
+	def edit_info_save
+		if session[:user_id].blank?
+			@error="Must login to edit your infomation!"
+			render "error"
+			return
+		end
+		if params[:user_id].blank?
+			@error="Incorrect user ID!"
+			render "error"
+			return		
+		end
+		user=User.find_by_id(params[:user_id])
+		if user.id!=session[:user_id]
+			@error="Incorrect user ID2!"
+			render "error"
+			return		
+		end
+		if isEmail(params[:email])==nil
+			flash[:error]="Invalid E-mail address!"
+			redirect_to :back
+			return
+		end
+		user.nickname=params[:nickname]
+		user.email=params[:email]
+		user.save!
+		@user_id=user.id
+	end
 private
 	def checkusername(username, referer)
 		if username.empty?
@@ -195,5 +272,8 @@ private
 	end
 	def all_letters_or_digits(str)
 		str[/[a-zA-Z0-9-_]+/]  == str
+	end
+	def isEmail(str)
+		return str.match(/[a-zA-Z0-9._%]@(?:[a-zA-Z0-9]+\.)[a-zA-Z]{2,4}/)
 	end
 end

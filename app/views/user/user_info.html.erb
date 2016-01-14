@@ -1,0 +1,23 @@
+<h3>User Infomation</h3>
+<% if @isself==1 %>
+	<%= link_to "Edit user profile", :action=>"edit_info_page" %>
+<% end %>
+<%= flash[:error] %>
+	<table>
+	<% if @isself==1 %>
+	<tr><td>Login name:</td>
+	<td><%= @user.name %></td></tr>
+	<% end %>
+	<% if @user.nickname.blank? == false or @isself==1 %>
+	<tr><td>Nickname:</td><td><%= @user.nickname %></td></tr>
+	<% else %>
+	<tr><td>Nickname:</td><td><%= @user.name %></td></tr>
+	<% end %>
+	<tr><td>E-mail address:</td><td><%= @user.email %></td></tr>
+	</table>
+<br />
+<% if request.referer != nil %>
+	<a href="<%= request.referer %>">Back</a>
+<% else %>
+	<a href="#" onclick="history.go(-1)">Back</a>
+<% end %>

@@ -1,17 +1,18 @@
 <h3>Forum</h3>
-<% if @user==nil %>
-<a href="/user/loginpage?gotoforum=1">Login</a>
-<% end %> 
 <div style="color: Red;"><%= flash[:error] %></div>
-<table style="width: 40%;">
+<table style="width: 60%;">
 <tr><th>Title</th>
-<th>User</th>
+<th style="width: 8em;">User</th>
 <th style="width: 5em;">Manage</th>
 </tr>
 <% @postthreads.each do |postthread| %>
 <tr class="hoverparent">
 <td><a href="/postthread/view?id=<%= postthread.id %>"><%= postthread.title %></a></td>
-<td><%= postthread.user.name %></td>
+<% if postthread.user.nickname.blank? %>
+<td><a href="/user?user_id=<%= postthread.user.id %>"><%= postthread.user.name %></a></td>
+<% else %>
+<td><a href="/user?user_id=<%= postthread.user.id %>"><%= postthread.user.nickname %></a></td>
+<% end %>
 <td>
 <% if @user!=nil and postthread.user.id==@user.id %>
 <div class="hiddenchild">
@@ -31,14 +32,22 @@
 </tr>
 <% end %>
 </table>
-
+<br />
 <% if @user != nil %>
-User:<%= @user.name %>
+<div class="dblock">
+User:
+<% if @user.nickname.blank? %>
+<%= @user.name %>
+<% else %>
+<%= @user.nickname %>
+<% end %>
+</div>
 <%= form_tag :action => 'new_thread_save' do %>
 <%= hidden_field_tag "user_id", @user.id %>
-Title:<%= text_field_tag "title", flash[:title],:class=>"post_title" %><br />
+<div class="dblock">Title:<%= text_field_tag "title", flash[:title],:class=>"post_title" %></div>
+<div class="dblock">
 Content:<br />
-<%= text_area_tag "content", flash[:content], :class=>"post_content" %> <br />
+<%= text_area_tag "content", flash[:content], :class=>"post_content" %></div>
 <%= submit_tag "Post" %>
 <% end %>
 
