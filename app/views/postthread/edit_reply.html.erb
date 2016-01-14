@@ -9,14 +9,21 @@
 	#	flash[:rcontent]=@postreply.content
 	#end
 %>
-User:<%= @user.name %>
+<div class="dblock">
+User:
+<% if @user.nickname.blank? %>
+<%= @user.name %>
+<% else %>
+<%= @user.nickname %>
+<% end %>
+</div>
 <%= form_tag :action => 'edit_reply_save' do %>
 <%= hidden_field_tag "user_id", @user.id %>
 <%= hidden_field_tag "postreply_id", @postreply.id %>
-Original title:<%= @postreply.title %><br />
-Title:<%= text_field_tag "title", flash[:rtitle], :class=>"post_title" %><br />
-Content:<br />
-<%= text_area_tag "content", @postreply.content, :class=>"post_content" %> <br />
+<div class="dblock">Original title:<%= @postreply.title %></div>
+<div class="dblock">Title:<%= text_field_tag "title", flash[:rtitle], :class=>"post_title" %></div>
+<div class="dblock">Content:<br />
+<%= text_area_tag "content", @postreply.content, :class=>"post_content" %> </div>
 <%= submit_tag "Post" %>
 <% end %>
 <% else %>

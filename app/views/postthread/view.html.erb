@@ -1,5 +1,6 @@
 <h3>View thread</h3>
 <div style="color: Red;"><%= flash[:error] %></div>
+<div class= "hoverparent">
 <div>Post by: 
 <a href="/user?user_id=<%= @poster.id %>">
 <% if @poster.nickname.blank? %>
@@ -11,7 +12,9 @@
 <div>Post at: <%= @postthread.created_at.strftime("%Y.%m.%d %H:%M:%S") %></div>
 <div>Title: <%= @postthread.title %>
 <% if @user!=nil and @poster.id==@user.id %>
+<div class="hiddenchild-hdiv">
 <a href="edit?id=<%= @postthread.id %>">Edit</a>
+</div>
 <% end %> 
 </div>
 <hr />
@@ -19,11 +22,12 @@
 <%= simple_format h @postthread.content %>
 </div>
 <hr />
+</div>
 <% if @replies.empty? != true %>
 <h4>Replies</h4>
 <div>
 <% @replies.each do |reply| %>
-<div  class= "hoverparent">
+<div class= "hoverparent">
 <div>Reply by: 
 <a href="/user?user_id=<%= reply.user.id %>">
 <% if reply.user.nickname.blank? %>
@@ -37,7 +41,13 @@
 <% if @user!=nil and reply.user.id==@user.id %>
 <div class= "hiddenchild-hdiv">
 <div class="horizonal-div"><a href="edit_reply?id=<%= reply.id %>">Edit</a></div>
-<div class="horizonal-div"><a href="delete_reply?postreply_id=<%= reply.id %>">Delete</a></div>
+<div class="horizonal-div">
+<%= form_tag( {:action => 'delete_reply'}, {:id=>"dr_"+reply.id.to_s}) do %>
+	<%= hidden_field_tag 'postreply_id', reply.id %>
+<% end %>
+<%= link_to_function "Delete", "popupConfirmDialogwithPost('confirm', confirmDeleteReply, 'dr_"+reply.id.to_s+"');" %>
+
+</div>
 </div>
 <% end %> 
 </div> 
@@ -82,3 +92,6 @@ Only users logged in could post Replies!
 </div>
 
 <div><a href="/postthread/">View all Threads</a></div>
+
+<!-- Process popup window for confirm dialog -->
+<%= render partial: "confirm_popup" %>
