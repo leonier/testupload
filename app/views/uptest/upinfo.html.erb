@@ -1,0 +1,15 @@
+<table>
+	<tr>
+		<th>Filename</th>
+		<th>Size</th>
+		<th>Upload Date and Time</th>
+	</tr>
+	<tr>
+		<td><%= @filename %></td>
+		<td><%= number_to_human_size(@size) %> </td>
+		<td><%= @uptime %></td>
+	</tr>
+</table>
+<% if @public == 1 %>
+	<a href="/uptest_download?file_id=<%= @fileid %>">Download</a>
+<% end %>

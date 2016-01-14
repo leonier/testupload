@@ -1,0 +1,52 @@
+<h3>Forum</h3>
+<% if @user==nil %>
+<a href="/user/loginpage?gotoforum=1">Login</a>
+<% end %> 
+<div style="color: Red;"><%= flash[:error] %></div>
+<table style="width: 40%;">
+<tr><th>Title</th>
+<th>User</th>
+<th style="width: 5em;">Manage</th>
+</tr>
+<% @postthreads.each do |postthread| %>
+<tr class="hoverparent">
+<td><a href="/postthread/view?id=<%= postthread.id %>"><%= postthread.title %></a></td>
+<td><%= postthread.user.name %></td>
+<td>
+<% if @user!=nil and postthread.user.id==@user.id %>
+<div class="hiddenchild">
+<div class="horizonal-div">
+<a href="edit?id=<%= postthread.id %>">Edit</a>
+</div>
+<div class="horizonal-div">
+<!--<a href="delete?id=<%= postthread.id %>">Delete</a>-->
+<%= form_tag( {:action => 'delete'}, {:id=>"dt_"+postthread.id.to_s}) do %>
+	<%= hidden_field_tag 'postthread_id', postthread.id %>
+<% end %>
+<%= link_to_function "Delete", "popupConfirmDialogwithPost('confirm', confirmDeleteThread, 'dt_"+postthread.id.to_s+"');" %>
+</div>
+</div>
+<% end %> 
+</td>
+</tr>
+<% end %>
+</table>
+
+<% if @user != nil %>
+User:<%= @user.name %>
+<%= form_tag :action => 'new_thread_save' do %>
+<%= hidden_field_tag "user_id", @user.id %>
+Title:<%= text_field_tag "title", flash[:title],:class=>"post_title" %><br />
+Content:<br />
+<%= text_area_tag "content", flash[:content], :class=>"post_content" %> <br />
+<%= submit_tag "Post" %>
+<% end %>
+
+<!-- Process popup window for confirm dialog -->
+<%= render partial: "confirm_popup" %>
+
+<% else %>
+Only users logged in could post new Threads!
+<% end %>
+
+<div><a href="/">Back to Index</a></div>

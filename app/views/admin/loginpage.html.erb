@@ -1,0 +1,10 @@
+<%= flash[:error] %>
+<%= form_tag :action => 'login' do %>
+	<table>
+	<tr><td>User name:</td>
+	<td><%= text_field_tag("username", flash[:username]) %></td></tr>
+	<tr><td>Password:</td><td><%= password_field_tag("password") %></td></tr>
+	</table>
+	<%= submit_tag  "Login"  %>
+<% end %>
+<a href="/user/registerpage">Register new user</a>

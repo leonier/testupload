@@ -1,0 +1,37 @@
+Notifications<br />
+<% unless @notifications.empty? %>
+<table>
+<tr>
+	<th>User name</th>
+	<th>Notification Date</th>
+	<th>Notification Text</th>
+	<th></th>
+</tr>
+<% @notifications.each do |notification| 
+	user=User.find_by_id(notification.user_id)
+	%>
+<tr>
+<td><%= user.name %></td>
+<td><%= notification.date.strftime("%Y.%m.%d")  %></td>
+<td><%= notification.notificationtext %></td>
+<td> <%= link_to "Delete", {:controller => "admin", :action => "deletenotification", :id => notification.id}, :confirm=>"Are you sure?" %></td>
+</tr>
+<% end %>
+</table>
+
+	<%= form_tag :action => 'deletenotification_user' do %>
+	
+		User:<select name="userid">
+		<% @users.each do |user| %> 
+			<option value="<%= user.id %>">
+			<%= user.name %>
+			</option>
+		<% end %>
+		</select>
+		<%= button_tag 'Delete all notifications for user' %>
+	<% end %>
+
+<% end %>
+
+<a href="/admin/newnotification">Add Notifications</a><br />
+<a href="/admin">Back to Administration</a>

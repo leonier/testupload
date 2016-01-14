@@ -1,0 +1,261 @@
+﻿<% require 'base64' %>
+<% require 'digest' %>
+
+<script type="text/javascript">
+<!--
+var _edit = 
+{
+	
+	IN: function (obj, act, id) 
+	{
+		var tag = obj.firstChild.tagName;
+		if (typeof(tag) != "undefined" && (tag == "INPUT" || tag == "TEXTAREA"))return;
+		if(obj.firstChild.id=="INPUTDIV")return;
+		var org = obj.innerHTML;
+		var orglen = org.replace(/[^\x00-\xff]/g,'**').length;
+		if (obj.offsetHeight <= 22) {
+			var val = window.ActiveXObject ? obj.innerText : obj.textContent;
+			var newdiv = document.createElement("DIV");
+			newdiv.id="INPUTDIV";
+			var txt = document.createElement("INPUT");
+			txt.value = val;
+			txt.style.background = "#FFC";
+			txt.style.width = obj.offsetWidth - 64 + "px" ;
+			obj.innerHTML = "";
+			newdiv.appendChild(txt);
+			
+			var btn=document.createElement("BUTTON");
+			var t = document.createTextNode("Save");
+			btn.appendChild(t);
+			btn.style.width =  "64px" ;
+			btn.onmousedown  = function(e){
+				obj.innerHTML = txt.value;
+				_edit.QUERY(act,txt.value, 'newname');
+				return false;
+			}
+			newdiv.appendChild(btn);   
+			
+			
+			
+			obj.appendChild(newdiv);
+			txt.focus();
+			txt.onblur = function(e){
+				obj.innerHTML = org;
+				//_edit.QUERY(act,txt.value, 'newname');
+				return false;
+			}
+
+			return false;
+		}
+		else
+		{
+			var content = obj.innerHTML;
+			var html = document.createElement('TEXTAREA');
+			html.style.width = obj.offsetWidth + "px";
+			html.style.height = obj.offsetHeight + "px";
+			obj.innerHTML = "";
+			html.value = content;
+			obj.appendChild(html);
+			html.focus();
+			html.onblur = function(e){
+				obj.innerHTML = html.value;
+				_edit.QUERY(act,  obj.innerHTML, 'newname' );
+			}
+			return false;
+		}
+	},
+	QUERY: function (url, postData, pname) 
+	{
+		var req = (window.XMLHttpRequest) ? new XMLHttpRequest() : (window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : false);
+		if (!req) alert("Unable to creat an XMLHttpRequest");
+		var method = (postData) ? "POST" : "GET";
+		//var method = "POST";
+		
+		var csrftoken="";
+		var x = document.getElementsByTagName('meta'); 
+		for (i = 0; i < x.length; i++) {
+    			if (x[i].name=="csrf-token")
+     				csrftoken=x[i].content;
+      			}
+		
+		req.open(method,url,true);
+		if (postData) 
+			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+			
+		req.setRequestHeader("X-CSRF-Token", csrftoken);
+		
+		req.onreadystatechange = function () {
+		if (req.readyState == 4) 
+		{
+			if(req.status == 200) 
+			{
+				var message = req.responseText;
+				if(message)alert(message);
+				if (message.indexOf("Success") !=-1) 
+				{
+					window.location.reload(true); 
+				}
+			}
+			else
+			{
+				alert("There was a problem with the request " + req.status);
+			}
+		}
+		}
+
+		req.send(pname+"="+postData);
+	}
+}
+
+var editContent = _edit.IN;
+// -->
+
+function copyTextToClipboard(text, id) {
+  var textArea = document.createElement("input");
+
+  textArea.id="ta_"+id;
+  textArea.fileid=id;
+  
+  textArea.style.position = 'fixed';
+  textArea.style.top = 0;
+  textArea.style.left = 0;
+
+  textArea.style.width = '0pt';
+  textArea.style.height = '0pt';
+
+  textArea.style.padding = 0;
+
+  textArea.style.border = 'none';
+  textArea.style.outline = 'none';
+  textArea.style.boxShadow = 'none';
+
+  textArea.style.background = 'transparent';
+
+
+  textArea.value = text;
+  
+  document.body.appendChild(textArea);
+  textArea.select();
+ try {
+    var successful = document.execCommand('copy');
+	if (successful)	
+		document.body.removeChild(textArea);
+	else
+	{
+		setBtnCtrlCCopy('btn_'+id,'Press Ctrl-C to copy!');
+		textArea.oncopy=function(e){
+			setBtnCtrlCCopy('btn_'+this.fileid, 'Copy to Clipboard');
+			window.setTimeout(function(f){
+				var taid='ta_'+f;
+				var ta=document.getElementById(taid);
+				ta.parentNode.removeChild(ta);
+			},100, this.fileid);
+		return true;
+	};	
+	}
+		
+  } catch (err) {
+    setBtnCtrlCCopy('btn_'+id,'Press Ctrl-C to copy!');
+    textArea.oncopy=function(e){
+		setBtnCtrlCCopy('btn_'+this.fileid, 'Copy to Clipboard');
+		window.setTimeout(function(f){
+			var taid='ta_'+f;
+			var ta=document.getElementById(taid);
+			ta.parentNode.removeChild(ta);
+			},100, this.fileid);
+		return true;
+	};	
+  }
+
+}
+function DeltmpText()
+{	
+	setBtnCtrlCCopy('btn_'+this.fileid, 'Copy to Clipboard');
+	document.body.removeChild(this);
+}
+function setBtnCtrlCCopy(btnid, value)
+{
+	var btn=document.getElementById(btnid);
+	//alert("setBtnCtrlCCopy "+btnid);
+	btn.value=value;
+}
+function copyAHref(id)
+{
+	var alink=document.getElementById('file_'+id);
+	copyTextToClipboard(alink.href, id);
+}
+</script>
+
+<% provide(:title, @user.name) %>
+<%= @user.name %>'s Files <a href="/user/logout">Logout</a> <a href="/user/change_password_page">Change Password</a> <br />
+<% if @today_notification.blank? == false %>
+	<div id="notifications"> 
+	<% @today_notification.each do |notification| %>
+	Notification: <span style="color: Red;"><%= notification.notificationtext %></span> <br />
+	<% end %>
+	</div>
+<% end %>
+<%= form_tag({:action=>"upload"}, {:multipart => true} ) do %>
+   <%= file_field :upload, :datafile%>
+   <%= submit_tag  "Upload"  %>
+<% end %>
+
+<% unless @files.empty? %>
+<table>
+<tr>
+	<th>File</th>
+	<th>Filename</th>
+	<th>Size</th>
+	<th>Upload date</th>
+	<th>External Download Link</th>
+	<th>Status</th>
+	<th></th>	
+</tr>
+<% @files.each do |uptest| %>
+	<% downfilename=uptest.id.to_s + "_"+ uptest.uploadtime.strftime("%Y%m%d%H%M%S")+File.extname(uptest.filename)
+		fullpath=Rails.root.join('uploads', downfilename)
+		size=File.size(fullpath)%>
+<tr class="hoverparent">
+	<td><%= link_to uptest.filename, :action =>"download", :file_id=>uptest.id  %></td>
+	<td title="Double click to rename!">
+	<div ondblclick="editContent(this,'uptest_rename?id=<%= uptest.id %>',3)"><%= uptest.filename %></div>
+	</td>
+	<td><%= number_to_human_size(size) %></td>
+	<td><%= uptest.uploadtime.strftime("%Y.%m.%d %H:%M:%S") %></td>
+	<td>
+	<% tstr=uptest.id.to_s+"@"+Digest::SHA256.digest(uptest.created_at.strftime("%Y%m%dT%H%M%S%N")) %>
+	<% myb64=Base64.urlsafe_encode64(tstr).delete('=') %>
+	<span class="hiddenchild">
+	<a href="file_<%= myb64 %>" id="file_<%= uptest.id %>">Link</a>
+	<% if uptest.public == 1 %>	
+		<input type="button"  style="border-width: 0px;" onclick="copyAHref('<%= uptest.id %>');" id="btn_<%= uptest.id %>" value="Copy to Clipboard">
+	<% end %>
+	</span>
+	</td>
+	
+	<%= form_tag( {:action => 'set_public'}, {:id=>"publ_"+uptest.id.to_s}) do %>
+		<%= hidden_field_tag 'id', uptest.id %>
+	<% end %>
+	<% if uptest.public == 1 %>
+	<td>
+		<%= link_to_function "Public", "popupConfirmDialogwithPost('confirm', confirmPrivate, 'publ_"+uptest.id.to_s+"');"%>
+	</td>
+	<% else %>
+	<td><%= link_to_function "Private", "popupConfirmDialogwithPost('confirm', confirmPublic, 'publ_"+uptest.id.to_s+"');"%></td>
+	<% end %>
+	</td>
+	<td>
+	<%= form_tag( {:action => 'delete'}, {:id=>"del_"+uptest.id.to_s}) do %>
+		<%= hidden_field_tag 'id', uptest.id %>
+	<% end %>
+	<%= link_to_function "Delete", "popupConfirmDialogwithPost('confirm', confirmDelete, 'del_"+uptest.id.to_s+"');", :class=>"hiddenchild" %>
+	</td>
+</tr>
+<% end %>
+</table>
+<% end %>
+<br />
+<a href="/editall">Edit all entries</a>
+<a href="/postthread">Forum</a>
+<!-- Process popup window for confirm dialog -->
+<%= render partial: "confirm_popup" %>

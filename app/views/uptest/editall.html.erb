@@ -1,0 +1,36 @@
+﻿<% require 'base64' %>
+<% require 'digest' %>
+
+
+<% unless @files.blank? %>
+Edit information of <%= @user.name %>'s all files <br />
+<%= form_tag :action => 'saveall' do %>
+<table>
+<tr>
+	<th>Filename</th>
+	<th>Upload date</th>
+	<th>Public</th>
+</tr>
+<% @files.each do |uptest| 
+	if uptest.public !=1
+		checked = false
+	else
+		checked = true
+	end
+	%>
+<tr>
+	<td>
+	<%= hidden_field_tag("uptest[][id]", uptest.id) %>
+	<%= text_field_tag("uptest[][filename]", uptest.filename) %>
+	</td>
+
+	<td><%= uptest.uploadtime.strftime("%Y.%m.%d %H:%M:%S") %></td>
+	<td><%= check_box_tag("uptest[][public]", "public", checked) %></td>
+</tr>
+<% end %>
+</table>
+<%= submit_tag  "Update all entries"  %>
+<% end %>
+<% else %>
+No files for user <%= @user.name %>!
+<% end %>

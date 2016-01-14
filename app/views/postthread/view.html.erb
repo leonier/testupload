@@ -1,0 +1,61 @@
+<h3>View thread</h3>
+<div style="color: Red;"><%= flash[:error] %></div>
+<div>Post by: <%= @poster.name %></div>
+<div>Post at: <%= @postthread.created_at.strftime("%Y.%m.%d %H:%M:%S") %></div>
+<div>Title: <%= @postthread.title %>
+<% if @user!=nil and @poster.id==@user.id %>
+<a href="edit?id=<%= @postthread.id %>">Edit</a>
+<% end %> 
+</div>
+<hr />
+<div>
+<%= simple_format h @postthread.content %>
+</div>
+<hr />
+<% if @replies.empty? != true %>
+<h4>Replies</h4>
+<div>
+<% @replies.each do |reply| %>
+<div  class= "hoverparent">
+<div>Reply by: <%= reply.user.name %></div>
+<div>Post at: <%= reply.created_at.strftime("%Y.%m.%d %H:%M:%S") %></div>
+<div><div class="horizonal-div">Title: <%= reply.title %></div>
+<% if @user!=nil and reply.user.id==@user.id %>
+<div class= "hiddenchild-hdiv">
+<div class="horizonal-div"><a href="edit_reply?id=<%= reply.id %>">Edit</a></div>
+<div class="horizonal-div"><a href="delete_reply?postreply_id=<%= reply.id %>">Delete</a></div>
+</div>
+<% end %> 
+</div> 
+<hr />
+<div>
+<%= simple_format h reply.content %>
+</div>
+<hr />
+</div>
+<% end %>
+<% else %>
+<div>No replies!</div>
+<% end %>
+
+<div>
+<% if @user != nil 
+	if flash[:nrtitle].blank?
+		flash[:nrtitle]="Re: "+@postthread.title
+	end
+%>
+User:<%= @user.name %>
+<%= form_tag :action => 'reply_save' do %>
+<%= hidden_field_tag "user_id", @user.id %>
+<%= hidden_field_tag "postthread_id", @postthread.id %>
+Title:<%= text_field_tag "title", flash[:nrtitle], :class=>"post_title" %><br />
+Content:<br />
+<%= text_area_tag "content", flash[:nrcontent], :class=>"post_content" %> <br />
+<%= submit_tag "Post" %>
+<% end %>
+<% else %>
+Only users logged in could post Replies!
+<% end %>
+</div>
+
+<div><a href="/postthread/">View all Threads</a></div>

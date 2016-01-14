@@ -1,0 +1,29 @@
+<h3>Edit thread</h3>
+<div style="color: Red;"><%= flash[:error] %></div>
+<div>
+<% if @user != nil 
+	if flash[:ttitle].blank? 
+		flash[:ttitle]=@postthread.title
+	end
+	if flash[:tcontent].blank?
+		flash[:tcontent]=@postthread.content
+	end
+%>
+User:<%= @user.name %>
+<%= form_tag :action => 'edit_save' do %>
+<%= hidden_field_tag "user_id", @user.id %>
+<%= hidden_field_tag "postthread_id", @postthread.id %>
+Original title:<%= @postthread.title %><br />
+Title:<%= text_field_tag "title", flash[:ttitle], :class=>"post_title" %><br />
+Content:<br />
+<%= text_area_tag "content", flash[:tcontent], :class=>"post_content" %> <br />
+<%= submit_tag "Post" %>
+<% end %>
+<% else %>
+Only users logged in could edit Threads!
+<% end %>
+</div>
+
+<div><a href="/postthread/view?id=<%= @postthread.id %>">Return to Thread</a></div>
+
+<div><a href="/postthread/">View all Threads</a></div>

@@ -1,0 +1,85 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+
+.hiddenchild {
+   display: none;
+}
+.hiddenchild-hdiv {
+   display: none;
+}
+
+.hoverparent:hover .hiddenchild { 
+   display: block;
+}
+
+.hoverparent:hover .hiddenchild-hdiv{ 
+   display: inline-block;
+}
+.popup {
+  margin: auto;
+  top: 11em;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 50%;
+  position: relative;
+}
+.popup_confirm {
+  top: 20%;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+}
+.popup2 {
+  margin: auto;
+  top: 14em;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 33%;
+  position: relative;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 300ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+.horizonal-div{
+	display: inline-block;
+}
+
+.post_title{
+	width: 30%;
+}
+
+.post_content{
+	width: 60%;
+    height: 7em;
+	resize: none; 
+}

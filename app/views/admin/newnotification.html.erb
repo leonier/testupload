@@ -1,0 +1,39 @@
+
+<link rel="stylesheet" href="/assets/jquery-ui.css">
+<link rel="stylesheet" href="/assets/jquery.timepicker.css">
+<script src="/assets/jquery-ui.js"></script>
+<script src="/assets/jquery.timepicker.js"></script>
+<script language="javascript">
+$(function() {
+	$("#startdate").datepicker();
+	$("#enddate").datepicker();
+	/*$("#starttime").timepicker();
+	$('#starttime').timepicker({ 'timeFormat': 'H:i', 'step': 10});*/
+});
+</script>
+<%= form_tag :action => 'newnotification_save' do %>
+	
+	User:<select name="userid">
+	<% @users.each do |user| %> 
+		<option value="<%= user.id %>">
+		<%= user.name %>
+		</option>
+	<% end %>
+	</select>
+	<br />
+	Start Date:
+	<%= text_field_tag 'startdate' %>
+	<!--<%= text_field_tag 'starttime' %>--><br />
+	End Date:<%= text_field_tag 'enddate' %><br />
+	<%= check_box_tag 'weekday[]', '0', false %>Sunday
+	<%= check_box_tag 'weekday[]', '1', false %>Monday 
+	<%= check_box_tag 'weekday[]', '2', false %>Tuesday 
+	<%= check_box_tag 'weekday[]', '3', false %>Wednesday 
+	<%= check_box_tag 'weekday[]', '4', false %>Thursday 
+	<%= check_box_tag 'weekday[]', '5', false %>Friday
+	<%= check_box_tag 'weekday[]', '6', false %>Saturday
+	<br />Notification text:
+	<%= text_field_tag 'notificationtext_base' %>
+	<br />
+	<%= button_tag 'Save' %>
+<% end %>

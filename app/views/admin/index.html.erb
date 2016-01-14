@@ -1,0 +1,57 @@
+Admin page <br />
+Administrator: <%= @admin.name %> <a href="/admin/logout">Logout </a>
+<div style="color: Red;"><%= flash[:error] %></div>
+<% unless  @users.empty? %>
+<table>
+<tr>
+	<th>User name</th>
+	<th>Registration Date</th>
+	<th>File count</th>
+	<th>Total File size</th>
+	<th>Threads</th>
+	<th>Replies</th>
+	<th style="width: 16em;">Manage</th>
+</tr>
+<% @users.each do |user| 
+	allfilesize = 0
+	user.uptest.each do |myfile|
+		downfilename=myfile.id.to_s + "_"+ myfile.uploadtime.strftime("%Y%m%d%H%M%S")+File.extname(myfile.filename)
+		fullpath=Rails.root.join('uploads', downfilename)
+		allfilesize+=File.size(fullpath)
+	end
+	allthreads = user.postthread.count
+	allreplies = user.postreply.count	
+	
+	%>
+<tr class="hoverparent">
+<td><%= user.name %></td>
+<td><%= user.created_at.strftime("%Y.%m.%d %H:%M:%S")  %></td>
+<td><%= user.uptest.count %></td>
+<td><%= number_to_human_size(allfilesize) %></td>
+<td><%= allthreads %></td>
+<td><%= allreplies %></td>
+<td> 
+	<div class="hiddenchild">
+	<div class="horizonal-div">
+	<%= link_to_function "Reset password", "popupResetDialog('"+user.id.to_s+"','"+user.name+"');" %>
+	</div>
+	<div class="horizonal-div">
+	<%= form_tag( {:action => 'deleteall'}, {:id=>"del_"+user.id.to_s}) do %>
+		<%= hidden_field_tag 'user_id', user.id %>
+	<% end %>
+	<%= link_to_function "Delete all files", "popupConfirmDialogwithPost('confirm', confirmDeleteAll, 'del_"+user.id.to_s+"');" %></td>
+	</div>
+	</div>
+</tr>
+<% end %>
+</table>
+<a href="/admin/notification">Manage Notifications</a>
+<a href="/admin/newnotification">Add Notifications</a>
+<% end %>
+
+
+<!-- Process popup window for confirm dialog -->
+<%= render partial: "confirm_popup" %>
+
+<!-- Process popup window for password reset dialog -->
+<%= render partial: "reset_password_popup" %>
