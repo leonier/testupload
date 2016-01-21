@@ -217,18 +217,15 @@ nav li > ul > li:hover > ul  {
 
 
 .footer_push {
-	height:2em; // Replace with the height your footer should be
+	height:2em;
 }
 .container_footer_padding
 {
 	padding-bottom: 2em;
 }
 .footer {
-	height:2em; // Replace with the height your footer should be
-	width: 100%; // Don't change
-	background-repeat: repeat;
-	background-attachment: scroll;
-	background-position: 0% 0%;
+	height:2em;
+	width: 100%;
 	background-color: #f0f0f0;
 	position: fixed;
 	bottom: 0pt;
@@ -236,7 +233,7 @@ nav li > ul > li:hover > ul  {
 }   
 
 .footer_contents {
-	height:2em; // Replace with the height your footer should be
-	width: 1000px; // Visible width of footer
+	line-height: 2em;
+    vertical-align:middle;
 	margin:auto;
 }
