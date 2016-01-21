@@ -214,3 +214,29 @@ nav li > ul > li:hover > ul  {
 	 0%{color: Red;}
 	 50%{color: White}
 }
+
+
+.footer_push {
+	height:2em; // Replace with the height your footer should be
+}
+.container_footer_padding
+{
+	padding-bottom: 2em;
+}
+.footer {
+	height:2em; // Replace with the height your footer should be
+	width: 100%; // Don't change
+	background-repeat: repeat;
+	background-attachment: scroll;
+	background-position: 0% 0%;
+	background-color: #f0f0f0;
+	position: fixed;
+	bottom: 0pt;
+	left: 0pt;
+}   
+
+.footer_contents {
+	height:2em; // Replace with the height your footer should be
+	width: 1000px; // Visible width of footer
+	margin:auto;
+}

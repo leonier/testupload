@@ -240,7 +240,7 @@ function copyAHref(id)
 	<% else %>
 	<td><%= link_to_function "Private", "popupConfirmDialogwithPost('confirm', confirmPublic, 'publ_"+uptest.id.to_s+"');"%></td>
 	<% end %>
-	</td>
+	
 	<td>
 	<%= form_tag( {:action => 'delete'}, {:id=>"del_"+uptest.id.to_s}) do %>
 		<%= hidden_field_tag 'file_id', uptest.id %>

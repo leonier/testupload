@@ -11,9 +11,10 @@
 <body>
 <% if @nonav != true %>
 	<%= render 'layouts/navbar' %>	
-	<div class="container main">
+	<div class="container main container_footer_padding">
 	<%= yield %>
 	</div>
+	<%= render 'layouts/footer' %>	
 <% else %>
 <% if @adminmode == true %>
 	<%= render 'layouts/navbar_admin' %>	
@@ -21,7 +22,10 @@
 	<%= yield %>
 	</div>
 <% else %>
+<div class="container main container_footer_padding">
 <%= yield %>
+</div>
+<%= render 'layouts/footer' %>	
 <% end %>
 <% end %>
 </body>
