@@ -80,7 +80,8 @@ Testupload::Application.routes.draw do
   match '/user/'=>'user#user_info'
   match '/user/edit_info'=>'user#edit_info_page'
   post '/user/edit_info_save'=>'user#edit_info_save'
-   
+  match '/user/notification_read' =>'user#notification_read'
+  
   match '/admin/loginpage'=>'admin#loginpage'
   post '/admin/login'=>'admin#login'
   match '/admin/logout'=>'admin#logout'

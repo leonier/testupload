@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 		if user.blank? == false
 			if user.notification.blank? == false
 				today=DateTime.now
-				@todaynotification=Notification.where(:user_id=>user.id, :date=> today.utc.beginning_of_day..today.utc.end_of_day)	
+				@todaynotification=Notification.where(:user_id=>user.id, :date=> today.utc.beginning_of_day..today.utc.end_of_day).where("isread = 0 OR isread IS NULL")
 			end
 		end
 	end

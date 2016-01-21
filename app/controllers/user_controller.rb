@@ -223,6 +223,28 @@ class UserController < ApplicationController
 		user.save!
 		@user_id=user.id
 	end
+	def notification_read
+		if session[:user_id] == nil
+			@error="Not logged in!"
+			render "error"
+			return
+		end
+		@user=User.find_by_id(session[:user_id])
+		if @user.blank?
+			@error="Not logged in!"
+			render "error"
+			return
+		end	
+		notification=Notification.find_by_id(params[:nid])
+		if notification.blank?
+			@error="No such notification!"
+			render "error"
+			return
+		end
+		notification.isread = 1
+		notification.save!
+		redirect_to :back
+	end
 private
 	def checkusername(username, referer)
 		if username.empty?

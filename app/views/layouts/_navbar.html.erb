@@ -36,7 +36,7 @@
             <p class="notification-menu-text blink_me">You have Notifications!</p>
 			<ul>
 				<% @todaynotification.each do |notification| %>
-					<p class="notification-text"><%= notification.notificationtext %>&nbsp;<a href="/user/notification_read?nid="<%= notification.id %>">OK</a></p>
+					<p class="notification-text"><%= notification.notificationtext %>&nbsp;<a href="/user/notification_read?nid=<%= notification.id %>">OK</a></p>
 				<% end %>
 			</ul>
         </li>		
