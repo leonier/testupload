@@ -53,8 +53,14 @@ class UptestController < ApplicationController
 				islogin = 0
 			end
 		end
-		downfile=Uptest.find_by_id(params[:file_id])
-	
+		if params[:b64] == nil
+			downfile=Uptest.find_by_id(params[:file_id])
+		else
+			b64org=params[:b64] + '=' * (-1 * params[:b64].size & 3)
+			txt=Base64.urlsafe_decode64(b64org)
+			fileid,trail=txt.split('@',2)
+			downfile=Uptest.find_by_id(fileid)
+		end
 		if downfile == nil
 			redirect_to :action => "downerr"
 		else
@@ -133,6 +139,7 @@ class UptestController < ApplicationController
 		myfile=Uptest.find_by_id(fileid)
 		if publiclink == 1 and myfile.public == 1
 			@public = 1
+			@b64=params[:b64]
 			@fileid=fileid
 		end
 		@filename=myfile.filename

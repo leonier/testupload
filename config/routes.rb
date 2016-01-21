@@ -69,6 +69,7 @@ Testupload::Application.routes.draw do
   match 'uptest_rename'=>'uptest#rename'
   match 'uptest_upinfo'=>'uptest#upinfo'
   match 'file_:b64'=>'uptest#upinfo'
+  match 'down_:b64'=>'uptest#download'
   
   match '/user/loginpage'=>'user#loginpage'
   post '/user/login'=>'user#login'
