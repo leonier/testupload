@@ -245,6 +245,16 @@ class UserController < ApplicationController
 		notification.save!
 		redirect_to :back
 	end
+
+	def extlogin
+		user = User.from_omniauth(env["omniauth.auth"])
+		session[:user_id] = user.id
+		if params[:gotoforum]!= '1'
+			redirect_to :controller=> "uptest", :action=> "index"
+		else
+			redirect_to :controller=> "postthread", :action=> "index"
+		end
+	end
 private
 	def checkusername(username, referer)
 		if username.empty?

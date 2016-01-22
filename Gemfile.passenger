@@ -41,3 +41,6 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'debugger'
+
+gem "omniauth-google-oauth2", "~> 0.2.1"
+
