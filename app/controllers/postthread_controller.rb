@@ -12,6 +12,7 @@ class PostthreadController < ApplicationController
 		@postthreads=Postthread.all
 	end
 	def new_thread_save
+		haveattachment = 0
 		if session[:user_id] == nil
 			@error="Not logged in!"
 			render "error"
@@ -50,11 +51,44 @@ class PostthreadController < ApplicationController
 			redirect_to :back
 			return
 		end		
+		if params[:attachment_select].blank? == false and params[:attachment_select] != '-2' and params[:attachment_select] !='-1'
+			myuptest=Uptest.find_by_id(params[:attachment_select])
+			if myuptest.blank?
+				flash[:error]="Wrong Attachment ID!"
+				redirect_to :back
+				return			
+			end
+			haveattachment = 1
+		end
 		newthread=Postthread.new
 		newthread.user_id=params[:user_id]
 		newthread.title=params[:title]
 		newthread.content=params[:content]
 		newthread.save!
+		#Upload new attachment.
+		if params[:attachment_select] == '-2' and params[:upload] != nil
+			data=params[:upload]
+			uptime=DateTime.now
+			myuptest=Uptest.new(:filename=>data[:datafile].original_filename,:uploadtime =>uptime)
+			myuptest.user_id=@user.id
+			myuptest.public = 1
+			myuptest.save!
+			newfilename=myuptest.id.to_s + "_"+ myuptest.uploadtime.strftime("%Y%m%d%H%M%S")+File.extname(data[:datafile].original_filename)
+			File.open(Rails.root.join('uploads', newfilename), 'wb') do |of|
+    				of.write(data[:datafile].read)	
+			end
+			haveattachment = 1	
+		end
+		#Attachment process.
+		if haveattachment == 1
+			newattach=Attachment.new
+			newattach.postthread_id=newthread.id
+			newattach.uptest_id=myuptest.id
+			newattach.save!
+			myuptest.public = 1
+			myuptest.save!
+		end
+			
 		flash.discard
 		redirect_to :back
 	end
@@ -68,6 +102,7 @@ class PostthreadController < ApplicationController
 		end
 		@title+=": "+@postthread.title
 		@poster=@postthread.user
+		@attachments=@postthread.attachment
 		@replies=@postthread.postreply
 	end
 	def reply_save
@@ -146,9 +181,15 @@ class PostthreadController < ApplicationController
 			@error="Incorrect thread ID!"
 			render "error"
 			return
-		end			
+		end		
+		@allattachment=@postthread.attachment
+		@alluptest=@user.uptest
+		@allattachment.each do |attachment|
+			@alluptest.delete_if{|uptest|uptest.id==attachment.uptest_id}
+		end
 	end
 	def edit_save
+		havenewattachment = 0
 		if session[:user_id] == nil
 			@error="Not logged in!"
 			render "error"
@@ -167,11 +208,7 @@ class PostthreadController < ApplicationController
 			redirect_to :back
 			return			
 		end
-		if params[:user_id].blank? or @user.id != params[:user_id].to_i
-			flash[:error]="Incorrect user ID!"
-			redirect_to :back
-			return			
-		end		
+
 		@postthread=Postthread.find_by_id(params[:postthread_id])
 		if @postthread.blank?
 			flash[:error]="Incorrect thread ID!"
@@ -197,10 +234,45 @@ class PostthreadController < ApplicationController
 			flash[:error]="Wrong content length!"
 			redirect_to :back
 			return
-		end			
+		end		
+
+		if params[:attachment_select].blank? == false and params[:attachment_select] != '-2' and params[:attachment_select] !='-1'
+			myuptest=Uptest.find_by_id(params[:attachment_select])
+			if myuptest.blank?
+				flash[:error]="Wrong Attachment ID!"
+				redirect_to :back
+				return			
+			end
+			havenewattachment = 1
+		end	
 		@postthread.title=params[:title]
 		@postthread.content=params[:content]
 		@postthread.save!
+		#Upload new attachment.
+		if params[:attachment_select] == '-2' and params[:upload] != nil
+			data=params[:upload]
+			uptime=DateTime.now
+			myuptest=Uptest.new(:filename=>data[:datafile].original_filename,:uploadtime =>uptime)
+			myuptest.user_id=@user.id
+			myuptest.public = 1
+			myuptest.save!
+			newfilename=myuptest.id.to_s + "_"+ myuptest.uploadtime.strftime("%Y%m%d%H%M%S")+File.extname(data[:datafile].original_filename)
+			File.open(Rails.root.join('uploads', newfilename), 'wb') do |of|
+    				of.write(data[:datafile].read)	
+			end
+			havenewattachment = 1	
+		end
+
+		#Attachment process.
+		if havenewattachment == 1
+			newattach=Attachment.new
+			newattach.postthread_id=@postthread.id
+			newattach.uptest_id=myuptest.id
+			newattach.save!
+			myuptest.public = 1
+			myuptest.save!
+		end		
+
 		flash.discard
 	end
 	def edit_reply

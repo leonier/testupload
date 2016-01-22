@@ -1,3 +1,15 @@
+<script language="JavaScript">
+function ShowUploadBox()
+{
+	var selectbox=document.getElementById('attachment_select');
+	var uploadbox=document.getElementById('attachment_upload');
+
+	if(selectbox.value=='-2')
+		uploadbox.style.display='table-row';
+	else
+		uploadbox.style.display='none';
+}
+</script>
 <h3>Forum</h3>
 <div style="color: Red;"><%= flash[:error] %></div>
 <table style="width: 60%;">
@@ -42,12 +54,25 @@ User:
 <%= @user.nickname %>
 <% end %>
 </div>
-<%= form_tag :action => 'new_thread_save' do %>
+<%= form_tag({:action => 'new_thread_save'}, {:multipart => true}) do %>
 <%= hidden_field_tag "user_id", @user.id %>
 <div class="dblock">Title:<%= text_field_tag "title", flash[:title],:class=>"post_title" %></div>
 <div class="dblock">
 Content:<br />
 <%= text_area_tag "content", flash[:content], :class=>"post_content" %></div>
+	<div>Attachment file:<select name="attachment_select" id="attachment_select" onchange="ShowUploadBox();">
+		<option value="-1" selected="selected" >None</option>
+		<option value="-2">Upload new..</option>
+		<%@user.uptest.each do |file| %>
+			<option value="<%= file.id %>">
+				<%= file.filename %>
+			</option>
+		<% end %></select></div>
+	<div id="attachment_upload">Upload new:<%= file_field :upload, :datafile%></div>
+	<script language="JavaScript">
+		ShowUploadBox();
+	</script>
+	<br />
 <%= submit_tag "Post" %>
 <% end %>
 

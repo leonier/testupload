@@ -22,6 +22,16 @@
 <%= simple_format h @postthread.content %>
 </div>
 <hr />
+<% unless @attachments.empty? %>
+<div>Attachments:
+<% @attachments.each do |attachment| %>
+	<% if attachment.uptest.public == 1 %>
+	<a href="/uptest_download?file_id=<%= attachment.uptest.id %>"><%= attachment.uptest.filename %></a>
+	<% end %>
+<% end %>
+</div>
+<hr />
+<% end %>
 </div>
 <% if @replies.empty? != true %>
 <h4>Replies</h4>
