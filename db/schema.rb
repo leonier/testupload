@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160113074149) do
+ActiveRecord::Schema.define(:version => 20160122040733) do
 
   create_table "admins", :force => true do |t|
     t.string   "name"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20160113074149) do
     t.string   "notificationtext"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "isread"
   end
 
   create_table "postreplies", :force => true do |t|
@@ -57,9 +58,15 @@ ActiveRecord::Schema.define(:version => 20160113074149) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "password_hash"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.string   "salt"
+    t.string   "nickname"
+    t.string   "email"
+    t.boolean  "isexternal"
+    t.string   "external_type"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
   end
 
 end
