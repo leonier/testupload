@@ -109,6 +109,11 @@ class UserController < ApplicationController
 			render "error"
 			return
 		end	
+		if @user.isexternal == true
+			@error="Cannot change password of External account!"
+			render "error"
+			return
+		end
 	end
 	def change_password
 		if session[:user_id] == nil
@@ -132,6 +137,11 @@ class UserController < ApplicationController
 			@error="Wrong user ID!"
 			render "error"
 			return		
+		end
+		if testuser.isexternal == true
+			@error="Cannot change password of External account!"
+			render "error"
+			return
 		end
 		if checkpassword2(params[:oldpassword]) == false
 			return

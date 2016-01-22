@@ -16,11 +16,16 @@
 					<%= User.find_by_id(session[:user_id]).name %>
 				<% else %>
 					<%= User.find_by_id(session[:user_id]).nickname %>
-				<% end %>		
+				<% end %>
+			<% if user.isexternal == true and user.external_type=='google_oauth2' %>
+				<img src="/assets/google24.png" alt="Google account" style="height: 1em;" />
+			<% end %>		
 			</a>
 			<ul>
 			<li><a href="/user/edit_info">Edit user profile</a></li>
+			<% unless user.isexternal == true %>
 			<li><a href="/user/change_password_page">Change Password</a></li>
+			<% end %>
 			<li><a href="/user/logout">Logout</a></li>
 			</ul>
 		</li>

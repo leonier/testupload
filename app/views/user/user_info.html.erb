@@ -5,8 +5,13 @@
 <%= flash[:error] %>
 	<table>
 	<% if @isself==1 %>
+	<% unless @user.isexternal == true %>
 	<tr><td>Login name:</td>
 	<td><%= @user.name %></td></tr>
+	<% else %>
+	<tr><td>Login using:</td>
+	<td><%= @user.external_type %></td></tr>
+	<% end %>
 	<% end %>
 	<% if @user.nickname.blank? == false or @isself==1 %>
 	<tr><td>Nickname:</td><td><%= @user.nickname %></td></tr>
